@@ -1,0 +1,12 @@
+- transcribeWavFile:
+    call: http.post
+    args:
+      url: https://us-central1-hightowerlabs.cloudfunctions.net/transcribe
+      body: |
+        What's up YouTube? I'm Kelsey and welcome to my channel. Before we dive in please be sure to smash that like button and subscribe so you don't miss future videos.
+    result: transcription
+- storeTranscription:
+    call: http.post
+    args:
+      url: https://us-central1-hightowerlabs.cloudfunctions.net/store-transcription
+      body: transcription.body

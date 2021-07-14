@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd transcribe
+
+gcloud functions deploy transcribe \
+  --entry-point TranscribeHTTP \
+  --runtime go113 \
+  --trigger-http \
+  --allow-unauthenticated
