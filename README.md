@@ -52,6 +52,8 @@ What's up YouTube? I'm Kelsey and welcome to my channel. Before we dive in pleas
 
 ## Create the Store Transcription Function
 
+This is the funciton which stores the transcribed podcast in a file in cloud storage. Once the 
+
 ```
 PROJECT_ID=$(gcloud config get-value project)
 ```
