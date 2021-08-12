@@ -233,7 +233,7 @@ gcloud beta functions deploy transcribe \
   --trigger-http \
   --service-account ${TRANSCRIBE_SERVICE_ACCOUNT_EMAIL} \
   --source transcribe
-  **--min_instances 3**
+  --min_instances 3
 ```
 
 Deploy the `store-transcription` function with min instances:
@@ -247,7 +247,7 @@ gcloud beta functions deploy store-transcription \
   --service-account ${STORE_TRANSCRIPTION_SERVICE_ACCOUNT_EMAIL} \
   --set-env-vars="TRANSCRIPTION_UPLOAD_BUCKET_NAME=${TRANSCRIPTION_UPLOAD_BUCKET_NAME}" \
   --source store-transcription
-  **--min_instances 3**
+  --min_instances 3
 ```
 
 Deploy the `send-email` function with min instances:
@@ -261,5 +261,5 @@ gcloud beta functions deploy send-email \
   --trigger-event google.storage.object.finalize \
   --service-account ${SEND_EMAIL_FUNCTION_SERVICE_ACCOUNT_EMAIL} \
   --source send-email
-  **--min_instances 3**
+  --min_instances 3
 ```
