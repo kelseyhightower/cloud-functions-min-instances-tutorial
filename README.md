@@ -3,7 +3,7 @@
 
 ## Creating the Transcribe Function
 
-This is the function which takes in the audio podcast and transcribes it into a text file.
+This is the function which takes in an audio podcast and transcribes it into a text file.
 
 ```
 PROJECT_ID=$(gcloud config get-value core/project)
