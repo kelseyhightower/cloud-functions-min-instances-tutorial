@@ -52,7 +52,7 @@ What's up YouTube? I'm Kelsey and welcome to my channel. Before we dive in pleas
 
 ## Create the Store Transcription Function
 
-This is the funciton which stores the transcribed podcast in a file in cloud storage. Once the 
+This is the funciton which stores the transcribed podcast obtained from the transcribe function in a file in cloud storage. Once the file is stored in cloud storage, an event is fired to invoke a function which sends an email to the user.
 
 ```
 PROJECT_ID=$(gcloud config get-value project)
@@ -122,6 +122,8 @@ gs://hightowerlabs-transcriptions/podcast.txt
 ```
 
 ## Create the Send Email Function
+
+This is a function which sends an email to a user notifying the user that the transcription of the podcast has been completed.
 
 ```
 PROJECT_ID=$(gcloud config get-value project)
