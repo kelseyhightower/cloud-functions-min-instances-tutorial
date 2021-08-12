@@ -220,3 +220,46 @@ D      send-email  lhbhfloz53ii  2021-07-14 17:29:57.696  Function execution too
        send-email  lhbhfloz53ii  2021-07-14 17:29:54.695  Processing send email request
 D      send-email  lhbhfloz53ii  2021-07-14 17:29:54.692  Function execution started
 ```
+
+## Setting Min Instance Configuration with your functions
+
+Deploy the `transcribe` function with min instances:
+
+```
+gcloud beta functions deploy transcribe \
+  --allow-unauthenticated \
+  --entry-point Transcribe \
+  --runtime go113 \
+  --trigger-http \
+  --service-account ${TRANSCRIBE_SERVICE_ACCOUNT_EMAIL} \
+  --source transcribe
+  --min_instances 3
+```
+
+Deploy the `store-transcription` function with min instances:
+
+```
+gcloud beta functions deploy store-transcription \
+  --allow-unauthenticated \
+  --entry-point StoreTranscription \
+  --runtime go113 \
+  --trigger-http \
+  --service-account ${STORE_TRANSCRIPTION_SERVICE_ACCOUNT_EMAIL} \
+  --set-env-vars="TRANSCRIPTION_UPLOAD_BUCKET_NAME=${TRANSCRIPTION_UPLOAD_BUCKET_NAME}" \
+  --source store-transcription
+  --min_instances 3
+```
+
+Deploy the `send-email` function with min instances:
+
+```
+gcloud beta functions deploy send-email \
+  --allow-unauthenticated \
+  --entry-point SendEmail \
+  --runtime go113 \
+  --trigger-resource ${TRANSCRIPTION_UPLOAD_BUCKET_NAME} \
+  --trigger-event google.storage.object.finalize \
+  --service-account ${SEND_EMAIL_FUNCTION_SERVICE_ACCOUNT_EMAIL} \
+  --source send-email
+  --min_instances 3
+```
