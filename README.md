@@ -261,5 +261,5 @@ gcloud beta functions deploy send-email \
   --trigger-event google.storage.object.finalize \
   --service-account ${SEND_EMAIL_FUNCTION_SERVICE_ACCOUNT_EMAIL} \
   --source send-email
-  --min_instances 3
+  ##--min_instances 3##
 ```
