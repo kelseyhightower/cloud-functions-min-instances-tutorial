@@ -8,6 +8,9 @@ Now let’s consider building your podcast transformation application with and w
 
 ## Approach 1: Base case, without min instances
 
+![Approach 1](Workflow_No_Min_Instances.jpg)
+
+
 
 In this approach, we use Cloud Functions and Google Cloud Workflows to chain together  three individual cloud functions. The first function (transcribe), transcribes the podcast, the second function (store-transcription) consumes the result of the first function in the workflow and stores it in Cloud Storage , and the third function (send-email), is triggered by Cloud Storage when the transcribed result is stored to send an email to the user to inform them that the workflow is complete.
 
