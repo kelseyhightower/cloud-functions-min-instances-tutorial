@@ -197,6 +197,12 @@ D      transcribe  e0vp3y8gfs5j  2021-07-14 17:29:47.471  Function execution sta
 ```
 
 ```
+LEVEL  NAME        EXECUTION_ID  TIME_UTC                 LOG
+D      transcribe-base  6k258ardszq7  2021-08-13 06:26:05.026  Function execution took 6737 ms, finished with status code: 200
+D      transcribe-base  6k258ardszq7  2021-08-13 06:25:58.290  Function execution started
+```
+
+```
 gcloud functions logs read store-transcription
 ```
 
@@ -267,10 +273,51 @@ gcloud beta functions deploy send-email \
 
 ## Re-run the Workflow with Min Instances
 
+Run it the first time to warm the instance, this ensures any bootstrap logic in the init() method is completed once. The instance at this point is prewarmed, and does not need to have the bootstrapping/init logic to be run again.
 ```
 gcloud workflows run transcribe
 ```
 
+Run the workflow again a second time.
+```
+gcloud workflows run transcribe
+```
+
+
 ```
 gcloud functions logs read transcribe
+```
+
+> Output
+
+```
+LEVEL  NAME        EXECUTION_ID  TIME_UTC                 LOG
+D      transcribe  yu0magytxdyb  2021-08-13 06:26:17.843  Function execution took 5005 ms, finished with status code: 200
+D      transcribe  yu0magytxdyb  2021-08-13 06:26:12.839  Function execution started
+```
+
+```
+gcloud functions logs read store-transcription
+```
+
+> Output
+
+```
+LEVEL  NAME                      EXECUTION_ID  TIME_UTC                 LOG
+D      store-transcription-base  kunzo4g724ui  2021-08-13 06:26:08.075  Function execution took 2383 ms, finished with status code: 200
+D      store-transcription-base  kunzo4g724ui  2021-08-13 06:26:05.692  Function execution started
+```
+
+```
+gcloud functions logs read send-email
+```
+
+> Output
+
+```
+LEVEL  NAME        EXECUTION_ID  TIME_UTC                 LOG
+D      send-email  f0gtxaktn5ce  2021-08-13 06:26:22.527  Function execution took 3009 ms, finished with status: 'ok'
+       send-email  f0gtxaktn5ce  2021-08-13 06:26:22.526  Email sent successfully
+       send-email  f0gtxaktn5ce  2021-08-13 06:26:19.525  Sending email...
+
 ```
