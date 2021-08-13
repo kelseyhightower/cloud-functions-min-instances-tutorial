@@ -289,7 +289,7 @@ Run it the first time to warm the instance, this ensures any bootstrap logic in 
 gcloud workflows run transcribe
 ```
 
-Run the workflow again a second time.
+Run the workflow again a second time. You will see a significant improvment, as now the workflow is leveraging the min instances set on the functions.
 ```
 gcloud workflows run transcribe
 ```
