@@ -236,6 +236,8 @@ D      send-email  e0sdnt52vlcf  2021-08-13 06:26:22.532  Function execution too
 
 ## Approach 2: Setting Min Instance Configuration with your functions
 
+![Approach 2](Workflow_Min_Instances.png)
+
 In this approach, we follow all the same steps as in Approach 1, with an addition of a set of min instances for each of the functions in the given workflow.
 
 Deploy the `transcribe` function with min instances:
