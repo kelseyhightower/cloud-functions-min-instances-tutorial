@@ -303,9 +303,9 @@ gcloud functions logs read store-transcription
 > Output
 
 ```
-LEVEL  NAME                      EXECUTION_ID  TIME_UTC                 LOG
-D      store-transcription-base  kunzo4g724ui  2021-08-13 06:26:08.075  Function execution took 2383 ms, finished with status code: 200
-D      store-transcription-base  kunzo4g724ui  2021-08-13 06:26:05.692  Function execution started
+LEVEL  NAME                      EXECUTION_ID  TIME_UTC                 LOG\
+D      store-transcription  ci24ipm9d1c9  2021-08-13 06:26:18.345  Function execution took 397 ms, finished with status code: 200
+D      store-transcription  ci24ipm9d1c9  2021-08-13 06:26:17.948  Function execution started
 ```
 
 ```
