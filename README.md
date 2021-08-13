@@ -1,5 +1,17 @@
 # Tutorial
 
+This is a tutorial walking a user on how can use the min instances feature on Cloud Functions to mitigate Cold Starts.
+
+Let’s take a deeper look at min instances with a real-world use case: recording, transforming and serving a podcast. Podcasts are super popular, when you record a podcast, you need to get the audio in the right format (mp3, wav), and then make the podcast accessible so that users can easily access, download and listen to it. The application takes a recorded podcast, transcribes it from wav to text, stores it in Cloud Storage, and then emails an end user with a link to the transcribed file.
+
+Now let’s consider building your podcast transformation application with and without min instances. 
+
+## Approach 1: Base case, without min instances
+
+
+In this approach, we use Cloud Functions and Google Cloud Workflows to chain together  three individual cloud functions. The first function (transcribe), transcribes the podcast, the second function (store-transcription) consumes the result of the first function in the workflow and stores it in Cloud Storage , and the third function (send-email), is triggered by Cloud Storage when the transcribed result is stored to send an email to the user to inform them that the workflow is complete.
+
+
 
 ## Creating the Transcribe Function
 
@@ -219,7 +231,9 @@ D      send-email  e0sdnt52vlcf  2021-08-13 06:26:22.532  Function execution too
        send-email  e0sdnt52vlcf  2021-08-13 06:26:19.528  Sending email...
 ```
 
-## Setting Min Instance Configuration with your functions
+## Approach 2: Setting Min Instance Configuration with your functions
+
+In this approach, we follow all the same steps as in Approach 1, with an addition of a set of min instances for each of the functions in the given workflow.
 
 Deploy the `transcribe` function with min instances:
 
