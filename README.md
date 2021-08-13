@@ -232,7 +232,7 @@ gcloud beta functions deploy transcribe \
   --runtime go113 \
   --trigger-http \
   --service-account ${TRANSCRIBE_SERVICE_ACCOUNT_EMAIL} \
-  --source transcribe
+  --source transcribe \
   --min_instances 3
 ```
 
@@ -246,7 +246,7 @@ gcloud beta functions deploy store-transcription \
   --trigger-http \
   --service-account ${STORE_TRANSCRIPTION_SERVICE_ACCOUNT_EMAIL} \
   --set-env-vars="TRANSCRIPTION_UPLOAD_BUCKET_NAME=${TRANSCRIPTION_UPLOAD_BUCKET_NAME}" \
-  --source store-transcription
+  --source store-transcription \
   --min_instances 3
 ```
 
@@ -260,7 +260,7 @@ gcloud beta functions deploy send-email \
   --trigger-resource ${TRANSCRIPTION_UPLOAD_BUCKET_NAME} \
   --trigger-event google.storage.object.finalize \
   --service-account ${SEND_EMAIL_FUNCTION_SERVICE_ACCOUNT_EMAIL} \
-  --source send-email
+  --source send-email \
   --min_instances 3
 ```
 
