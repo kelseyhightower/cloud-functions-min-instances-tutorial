@@ -263,3 +263,14 @@ gcloud beta functions deploy send-email \
   --source send-email
   --min_instances 3
 ```
+
+
+## Re-run the Workflow with Min Instances
+
+```
+gcloud workflows run transcribe
+```
+
+```
+gcloud functions logs read transcribe
+```
