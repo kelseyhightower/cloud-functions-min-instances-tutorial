@@ -8,7 +8,7 @@ Now let’s consider building your podcast transformation application with and w
 
 ## Approach 1: Base case, without min instances
 
-![Approach 1](Workflow_No_Min_Instances.jpg)
+![Approach 1](Workflow_No_Min_Instances.png)
 
 
 
