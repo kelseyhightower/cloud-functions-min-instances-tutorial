@@ -335,3 +335,5 @@ D      send-email  f0gtxaktn5ce  2021-08-13 06:26:22.527  Function execution too
        send-email  f0gtxaktn5ce  2021-08-13 06:26:19.525  Sending email...
 
 ```
+
+Now consider executing the Podcast transformation workflow using Approach 2, where the min instances are set on the Cloud Functions. Here is an instance of this run with a snapshot of the log entries. On comparing the start and end timestamps of the run, one can see here that the Total Runtime in Approach 2 took 6 s.
