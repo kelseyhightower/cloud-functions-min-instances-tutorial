@@ -1,6 +1,6 @@
 # Tutorial
 
-This is a tutorial walking a user on how can use the min instances feature on Cloud Functions to mitigate Cold Starts.
+This is a tutorial walking a user on how one can use the min instances feature on Cloud Functions to mitigate Cold Starts.
 
 Let’s take a deeper look at min instances with a real-world use case: recording, transforming and serving a podcast. Podcasts are super popular, when you record a podcast, you need to get the audio in the right format (mp3, wav), and then make the podcast accessible so that users can easily access, download and listen to it. The application takes a recorded podcast, transcribes it from wav to text, stores it in Cloud Storage, and then emails an end user with a link to the transcribed file.
 
