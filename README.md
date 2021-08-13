@@ -192,14 +192,8 @@ gcloud functions logs read transcribe
 
 ```
 LEVEL  NAME        EXECUTION_ID  TIME_UTC                 LOG
-D      transcribe  e0vp3y8gfs5j  2021-07-14 17:29:52.490  Function execution took 5019 ms, finished with status code: 200
-D      transcribe  e0vp3y8gfs5j  2021-07-14 17:29:47.471  Function execution started
-```
-
-```
-LEVEL  NAME        EXECUTION_ID  TIME_UTC                 LOG
-D      transcribe-base  6k258ardszq7  2021-08-13 06:26:05.026  Function execution took 6737 ms, finished with status code: 200
-D      transcribe-base  6k258ardszq7  2021-08-13 06:25:58.290  Function execution started
+D      transcribe  6k258ardszq7  2021-08-13 06:26:05.026  Function execution took 6737 ms, finished with status code: 200
+D      transcribe  6k258ardszq7  2021-08-13 06:25:58.290  Function execution started
 ```
 
 ```
@@ -208,8 +202,8 @@ gcloud functions logs read store-transcription
 
 ```
 LEVEL  NAME                 EXECUTION_ID  TIME_UTC                 LOG
-D      store-transcription  a83bkkpsx4jr  2021-07-14 17:29:52.859  Function execution took 259 ms, finished with status code: 200
-D      store-transcription  a83bkkpsx4jr  2021-07-14 17:29:52.600  Function execution started
+D      store-transcription  kunzo4g724ui  2021-08-13 06:26:08.075  Function execution took 2383 ms, finished with status code: 200
+D      store-transcription  kunzo4g724ui  2021-08-13 06:26:05.692  Function execution started
 ```
 
 ```
@@ -220,11 +214,9 @@ gcloud functions logs read send-email
 
 ```
 LEVEL  NAME        EXECUTION_ID  TIME_UTC                 LOG
-D      send-email  lhbhfloz53ii  2021-07-14 17:29:57.696  Function execution took 3005 ms, finished with status: 'ok'
-       send-email  lhbhfloz53ii  2021-07-14 17:29:57.696  Email sent successfully
-       send-email  lhbhfloz53ii  2021-07-14 17:29:54.695  Sending email...
-       send-email  lhbhfloz53ii  2021-07-14 17:29:54.695  Processing send email request
-D      send-email  lhbhfloz53ii  2021-07-14 17:29:54.692  Function execution started
+D      send-email  e0sdnt52vlcf  2021-08-13 06:26:22.532  Function execution took 3013 ms, finished with status: 'ok'
+       send-email  e0sdnt52vlcf  2021-08-13 06:26:22.529  Email sent successfully
+       send-email  e0sdnt52vlcf  2021-08-13 06:26:19.528  Sending email...
 ```
 
 ## Setting Min Instance Configuration with your functions
