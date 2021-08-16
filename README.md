@@ -1,14 +1,26 @@
 # Tutorial
 
-This tutorial walks you through using the min instances feature on Cloud Functions to mitigate Cold Starts.
+This tutorial walks you through using the Cloud Functions minimal instances feature to mitigate cold starts.
 
-Let’s take a deeper look at min instances with a real-world use case: transcribing a Podcast. The application takes a "recorded" podcast, transcribes the "audio", writes the text into Cloud Storage bucket, and then emails an end user with a link to the transcribed file.
+Let’s take a deeper look at min instances using a real-world use case: transcribing a podcast. The demo application takes a "recorded" podcast, transcribes the "audio", writes the text into a Cloud Storage bucket, and then emails a link to the transcribed file.
 
 > The recorded podcast is just a text file in order to keep the code simple.
 
 This tutorial also aims to highlight the end-to-end latency differences between running functions with and without the min instances configuration set. 
 
 ## Approach 1: Base case, without min instances
+
+## Prerequisites
+
+This tutorial assumes you have access to the [Google Cloud Platform](https://cloud.google.com). You'll also need to clone this repository and use it as your working directory.
+
+```
+git clone https://github.com/kelseyhightower/cloud-functions-min-instances-tutorial.git
+```
+
+```
+cd cloud-functions-min-instances-tutorial
+```
 
 ![Approach 1](Workflow_No_Min_Instances.png)
 
@@ -47,7 +59,7 @@ gcloud functions deploy transcribe \
 
 ### Testing the Transcribe Function
 
-Post the `podcast.wav` file to the `transcribe` function using the `curl` command line tool:
+Post the `podcast.wav` file to the `transcribe` function using `curl`:
 
 ```
 TRANSCRIBE_URL=$(gcloud functions describe transcribe \
@@ -74,7 +86,7 @@ What's up YouTube? I'm Kelsey and welcome to my channel. Before we dive in pleas
 
 ## Create the Store Transcription Function
 
-This is the funciton which write the transcribed podcast obtained from the transcribe function into a cloud storage bucket. Once the file is stored in cloud storage, an event is fired to invoke a function which sends an email to the user.
+This is the function which writes the transcribed podcast obtained from the transcribe function into a cloud storage bucket. Once the file is stored in cloud storage, an event is fired to invoke a function which sends an email to the user.
 
 ```
 PROJECT_ID=$(gcloud config get-value project)
@@ -129,7 +141,7 @@ gsutil ls gs://${TRANSCRIPTION_UPLOAD_BUCKET_NAME}
 
 > At this point the storage bucket should be empty.
 
-Post the `podcast.txt` file to the `store-transcription` function using the `curl` command line tool:
+Post the `podcast.txt` file to the `store-transcription` function using `curl`:
 
 ```
 STORE_TRANSCRIPTION_URL=$(gcloud functions describe store-transcription \
@@ -152,6 +164,8 @@ gsutil ls gs://${TRANSCRIPTION_UPLOAD_BUCKET_NAME}
 ```
 gs://hightowerlabs-transcriptions/podcast.txt
 ```
+
+At this point we have verified both the `transcribe` and `store-transcription` functions are working.
 
 ## Create the Send Email Function
 
@@ -191,10 +205,14 @@ STORE_TRANSCRIPTION_URL=$(gcloud functions describe store-transcription \
   --format='value(httpsTrigger.url)')
 ```
 
+Post the `podcast.txt` file to the `store-transcription` function using `curl`:
+
 ```
 curl -X POST ${STORE_TRANSCRIPTION_URL} \
   --data-binary @podcast.txt
 ```
+
+Review the `send-email` function logs:
 
 ```
 gcloud functions logs read send-email
@@ -211,16 +229,28 @@ D      send-email  lhbh4r703djk  2021-07-14 17:17:32.665  Function execution too
 D      send-email  lhbh4r703djk  2021-07-14 17:17:29.661  Function execution started
 ```
 
+Notice the timestamps which help you track the functions end-to-end processing time.
+
 ## Create a Workflow
+
+In this section you will create a Cloud Workflow to automated the execution of the podcast transcription pipeline.
+
+> You can review the `workflow.yaml` file to see the details of the pipeline.
+
+Deploy the `transcribe` workflow:
 
 ```
 gcloud workflows deploy transcribe \
   --source workflow.yaml
 ```
 
+Execute the `transcribe` workflow:
+
 ```
 gcloud workflows run transcribe
 ```
+
+Review each of the function logs to see the end to end execution of the pipeline:
 
 ```
 gcloud functions logs read transcribe
@@ -313,7 +343,7 @@ Run it the first time to warm the instance, this ensures any bootstrap logic in 
 gcloud workflows run transcribe
 ```
 
-Run the workflow again a second time. You will see a significant improvment, as now the workflow is leveraging the min instances set on the functions.
+Run the workflow again a second time. You will see a significant improvement, as now the workflow is leveraging the min instances set on the functions.
 ```
 gcloud workflows run transcribe
 ```
