@@ -8,8 +8,6 @@ Let’s take a deeper look at min instances using a real-world use case: transcr
 
 This tutorial also aims to highlight the end-to-end latency differences between running functions with and without the min instances configuration set. 
 
-## Approach 1: Base case, without min instances
-
 ## Prerequisites
 
 This tutorial assumes you have access to the [Google Cloud Platform](https://cloud.google.com). You'll also need to clone this repository and use it as your working directory.
@@ -21,6 +19,8 @@ git clone https://github.com/kelseyhightower/cloud-functions-min-instances-tutor
 ```
 cd cloud-functions-min-instances-tutorial
 ```
+
+## Approach 1: Base case, without min instances
 
 ![Approach 1](Workflow_No_Min_Instances.png)
 
