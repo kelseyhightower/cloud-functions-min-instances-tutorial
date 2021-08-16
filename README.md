@@ -1,19 +1,18 @@
 # Tutorial
 
-This is a tutorial walking a user on how one can use the min instances feature on Cloud Functions to mitigate Cold Starts.
+This tutorial walks you through using the min instances feature on Cloud Functions to mitigate Cold Starts.
 
-Let’s take a deeper look at min instances with a real-world use case: recording, transforming and serving a podcast. Podcasts are super popular, when you record a podcast, you need to get the audio in the right format (mp3, wav), and then make the podcast accessible so that users can easily access, download and listen to it. The application takes a recorded podcast, transcribes it from wav to text, stores it in Cloud Storage, and then emails an end user with a link to the transcribed file.
+Let’s take a deeper look at min instances with a real-world use case: transcribing a Podcast. The application takes a "recorded" podcast, transcribes the "audio", writes the text into Cloud Storage bucket, and then emails an end user with a link to the transcribed file.
 
-Now let’s consider building your podcast transformation application with and without min instances. 
+> The recorded podcast is just a text file in order to keep the code simple.
+
+This tutorial also aims to highlight the end-to-end latency differences between running functions with and without the min instances configuration set. 
 
 ## Approach 1: Base case, without min instances
 
 ![Approach 1](Workflow_No_Min_Instances.png)
 
-
-
-In this approach, we use Cloud Functions and Google Cloud Workflows to chain together  three individual cloud functions. The first function (transcribe), transcribes the podcast, the second function (store-transcription) consumes the result of the first function in the workflow and stores it in Cloud Storage , and the third function (send-email), is triggered by Cloud Storage when the transcribed result is stored to send an email to the user to inform them that the workflow is complete.
-
+In this approach, we use Cloud Functions and [Google Cloud Workflows](https://cloud.google.com/workflows) to chain together three individual cloud functions. The first function (transcribe), transcribes the podcast, the second function (store-transcription) consumes the result of the first function in the workflow and stores it in Cloud Storage , and the third function (send-email), is triggered by Cloud Storage after the transcribed file is writen, and sends an email to the user to inform them that the workflow is complete.
 
 
 ## Creating the Transcribe Function
@@ -24,6 +23,8 @@ This is the function which takes in an audio podcast and transcribes it into a t
 PROJECT_ID=$(gcloud config get-value core/project)
 ```
 
+Create the `transcribe-function` IAM service account:
+
 ```
 TRANSCRIBE_SERVICE_ACCOUNT_EMAIL="transcribe-function@${PROJECT_ID}.iam.gserviceaccount.com"
 ```
@@ -31,6 +32,8 @@ TRANSCRIBE_SERVICE_ACCOUNT_EMAIL="transcribe-function@${PROJECT_ID}.iam.gservice
 ```
 gcloud iam service-accounts create transcribe-function
 ```
+
+Deploy the `transcribe` function:
 
 ```
 gcloud functions deploy transcribe \
@@ -43,6 +46,8 @@ gcloud functions deploy transcribe \
 ```
 
 ### Testing the Transcribe Function
+
+Post the `podcast.wav` file to the `transcribe` function using the `curl` command line tool:
 
 ```
 TRANSCRIBE_URL=$(gcloud functions describe transcribe \
@@ -57,6 +62,8 @@ curl -X POST ${TRANSCRIBE_URL} \
 
 > Results
 
+Review the contents of the returned `podcast.txt` file:
+
 ```
 cat podcast.txt
 ```
@@ -67,11 +74,13 @@ What's up YouTube? I'm Kelsey and welcome to my channel. Before we dive in pleas
 
 ## Create the Store Transcription Function
 
-This is the funciton which stores the transcribed podcast obtained from the transcribe function in a file in cloud storage. Once the file is stored in cloud storage, an event is fired to invoke a function which sends an email to the user.
+This is the funciton which write the transcribed podcast obtained from the transcribe function into a cloud storage bucket. Once the file is stored in cloud storage, an event is fired to invoke a function which sends an email to the user.
 
 ```
 PROJECT_ID=$(gcloud config get-value project)
 ```
+
+Create the `store-transcription-function` IAM service account:
 
 ```
 STORE_TRANSCRIPTION_SERVICE_ACCOUNT_EMAIL="store-transcription-function@${PROJECT_ID}.iam.gserviceaccount.com"
@@ -112,9 +121,15 @@ gcloud functions deploy store-transcription \
 
 ### Test Transcription Uploads
 
+List the files in the transcription upload bucket:
+
 ```
 gsutil ls gs://${TRANSCRIPTION_UPLOAD_BUCKET_NAME}
 ```
+
+> At this point the storage bucket should be empty.
+
+Post the `podcast.txt` file to the `store-transcription` function using the `curl` command line tool:
 
 ```
 STORE_TRANSCRIPTION_URL=$(gcloud functions describe store-transcription \
@@ -125,6 +140,8 @@ STORE_TRANSCRIPTION_URL=$(gcloud functions describe store-transcription \
 curl -X POST ${STORE_TRANSCRIPTION_URL} \
   --data-binary @podcast.txt
 ```
+
+List the files in the transcription upload bucket:
 
 ```
 gsutil ls gs://${TRANSCRIPTION_UPLOAD_BUCKET_NAME}
@@ -144,6 +161,8 @@ This is a function which sends an email to a user notifying the user that the tr
 PROJECT_ID=$(gcloud config get-value project)
 ```
 
+Create the `sendemail-function` IAM service account:
+
 ```
 SEND_EMAIL_FUNCTION_SERVICE_ACCOUNT_EMAIL="sendemail-function@${PROJECT_ID}.iam.gserviceaccount.com"
 ```
@@ -151,6 +170,8 @@ SEND_EMAIL_FUNCTION_SERVICE_ACCOUNT_EMAIL="sendemail-function@${PROJECT_ID}.iam.
 ```
 gcloud iam service-accounts create sendemail-function
 ```
+
+Deploy the `send-email` function:
 
 ```
 gcloud functions deploy send-email \
