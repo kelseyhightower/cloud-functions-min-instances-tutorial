@@ -233,7 +233,7 @@ Notice the timestamps which help you track the functions end-to-end processing t
 
 ## Create a Workflow
 
-In this section you will create a Cloud Workflow to automated the execution of the podcast transcription pipeline.
+In this section you will create a Cloud Workflow to automate the execution of the podcast transcription pipeline.
 
 > You can review the `workflow.yaml` file to see the details of the pipeline.
 
