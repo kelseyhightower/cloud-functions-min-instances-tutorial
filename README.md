@@ -102,7 +102,7 @@ STORE_TRANSCRIPTION_SERVICE_ACCOUNT_EMAIL="store-transcription-function@${PROJEC
 gcloud iam service-accounts create store-transcription-function
 ```
 
-Create storage bucket to hold mp3 files:
+Create a storage bucket to hold text files:
 
 ```
 TRANSCRIPTION_UPLOAD_BUCKET_NAME="${PROJECT_ID}-transcriptions"
@@ -285,16 +285,18 @@ D      send-email  e0sdnt52vlcf  2021-08-13 06:26:22.532  Function execution too
        send-email  e0sdnt52vlcf  2021-08-13 06:26:19.528  Sending email...
 ```
 
-Now consider executing the Podcast transformation workflow using Approach 1, where the min instances are not set on the Cloud Functions. Here is an instance of this run with a snapshot of the log entries. On comparing the start and end timestamps of the run, one can see here that the Total Runtime in Approach 1 took 17 s. 
+Review the start and end timestamps of the entire transcription pipeline. The total runtime of Approach 1 took 17 seconds to complete.
+
+> Each function is hardcoded with a 2 second delay during function initialization. When combined with the Cloud Functions average cold start time, almost half the time is spend starting each function.
 
 
 ## Approach 2: Setting Min Instance Configuration with your functions
 
 ![Approach 2](Workflow_Min_Instances.png)
 
-In this approach, we follow all the same steps as in Approach 1, with an addition of a set of min instances for each of the functions in the given workflow.
+In this approach, we follow all the same steps as in Approach 1, with the addition of setting the `--min-instances` flag for each function `transcribe` workflow.
 
-Deploy the `transcribe` function with min instances:
+Redeploy the `transcribe` function with the `--min-instances` flag set:
 
 ```
 gcloud beta functions deploy transcribe \
@@ -307,7 +309,7 @@ gcloud beta functions deploy transcribe \
   --min-instances 5
 ```
 
-Deploy the `store-transcription` function with min instances:
+Redeploy the `store-transcription` function with the `--min-instances` flag set:
 
 ```
 gcloud beta functions deploy store-transcription \
@@ -321,7 +323,7 @@ gcloud beta functions deploy store-transcription \
   --min-instances 5
 ```
 
-Deploy the `send-email` function with min instances:
+Redeploy the `send-email` function with the `--min-instances` flag set:
 
 ```
 gcloud beta functions deploy send-email \
@@ -335,19 +337,23 @@ gcloud beta functions deploy send-email \
   --min-instances 5
 ```
 
+At this point each function in the `transcribe` workflow has been redeployed with the `--min-instances` flag set.
 
 ## Re-run the Workflow with Min Instances
 
-Run it the first time to warm the instance, this ensures any bootstrap logic in the init() method is completed once. The instance at this point is prewarmed, and does not need to have the bootstrapping/init logic to be run again.
+Re-run the `transcribe` workflow to warm up the functions. This ensures all functions have been initialized and ready to receive requests. 
+
 ```
 gcloud workflows run transcribe
 ```
 
-Run the workflow again a second time. You will see a significant improvement, as now the workflow is leveraging the min instances set on the functions.
+Run the `transcribe` workflow again. You should see a significant improvement in the end-to-end runtime of the transcription pipeline.
+
 ```
 gcloud workflows run transcribe
 ```
 
+Review the function logs:
 
 ```
 gcloud functions logs read transcribe
@@ -387,4 +393,4 @@ D      send-email  f0gtxaktn5ce  2021-08-13 06:26:22.527  Function execution too
 
 ```
 
-Now consider executing the Podcast transformation workflow using Approach 2, where the min instances are set on the Cloud Functions. Here is an instance of this run with a snapshot of the log entries. On comparing the start and end timestamps of the run, one can see here that the Total Runtime in Approach 2 took 6 s.
+Now we can compare the total runtime between Approach 1 and 2. The total runtime of Approach 2 is 6 seconds, which is 11 seconds faster than Approach 1, which does not leverage the min instances feature. Approach 2 avoids cold starts and the additional function initialization overhead, and should provide a more constant runtime experience. 
